@@ -137,15 +137,7 @@
         "kotlin"
       ],
       "description": "Kotlin 开发技能。",
-      "origin": "canonical",
-      "external_refs": [
-        {
-          "source": "esco",
-          "uri": "http://data.europa.eu/esco/skill/af7ae54f-4649-4c16-87c7-59ba41d4d57f",
-          "label": "SPARK",
-          "similarity": 0.8399
-        }
-      ]
+      "origin": "canonical"
     },
     {
       "id": "skill_swift",
@@ -754,15 +746,7 @@
         "pytest"
       ],
       "description": "Pytest 自动化测试经验。",
-      "origin": "canonical",
-      "external_refs": [
-        {
-          "source": "esco",
-          "uri": "http://data.europa.eu/esco/skill/af7ae54f-4649-4c16-87c7-59ba41d4d57f",
-          "label": "SPARK",
-          "similarity": 0.7911
-        }
-      ]
+      "origin": "canonical"
     },
     {
       "id": "tool_jmeter",
@@ -805,18 +789,6 @@
           "uri": "http://data.europa.eu/esco/skill/8fa510d0-a8a6-4932-a361-00f8442cfe23",
           "label": "Wireshark",
           "similarity": 0.8825
-        },
-        {
-          "source": "esco",
-          "uri": "http://data.europa.eu/esco/skill/968bb301-faa1-44aa-a7c9-75d1f7a43b3f",
-          "label": "bend wire",
-          "similarity": 0.8013
-        },
-        {
-          "source": "esco",
-          "uri": "http://data.europa.eu/esco/skill/374ff115-fc97-4b64-afc1-86ef14a25e4d",
-          "label": "seal wires",
-          "similarity": 0.7869
         }
       ]
     },
@@ -1833,7 +1805,6 @@
       "aliases": [
         "后端",
         "backend",
-        "后端接口",
         "服务端"
       ],
       "description": "后端方向偏好。",
@@ -1922,8 +1893,7 @@
       "name": "偏好稳定交付",
       "aliases": [
         "稳定交付",
-        "质量保障",
-        "可靠性"
+        "质量保障"
       ],
       "description": "稳定交付偏好。",
       "origin": "canonical"
@@ -1933,8 +1903,7 @@
       "name": "偏好可视化表达",
       "aliases": [
         "可视化",
-        "图表",
-        "dashboard"
+        "图表"
       ],
       "description": "可视化表达偏好。",
       "origin": "canonical"
