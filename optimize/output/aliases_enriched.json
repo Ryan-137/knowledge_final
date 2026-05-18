@@ -32,56 +32,101 @@
     "role_ml_engineer": [
       "算法工程师"
     ],
+    "knowledge_algorithms": [
+      "基础算法",
+      "算法设计",
+      "算法基础"
+    ],
     "skill_sql": [
+      "SQL语句",
       "SQL调优",
-      "sql语句",
       "SQL语句调优",
       "SQL语句功底",
       "SQL编程",
-      "SQL*PLUS"
+      "SQL*PLUS",
+      "sql server",
+      "sql优化",
+      "sqlserver",
+      "ms sqlserver",
+      "sql语言",
+      "pl/sql"
     ],
     "soft_teamwork": [
+      "团队合作能力",
       "团队合作精神",
       "团队合作意识",
-      "团队合作能力",
       "团队协作精神",
-      "团队协作能力"
-    ],
-    "soft_communication": [
-      "沟通表达能力",
-      "表达和沟通能力",
-      "交流沟通能力",
-      "沟通交流",
-      "表达与沟通能力"
-    ],
-    "knowledge_system_design": [
-      "系统架构设计",
-      "系统的架构设计",
-      "系统架构设计能力"
-    ],
-    "skill_cpp": [
-      "C/C++"
-    ],
-    "tool_mysql": [
-      "Mysql数据库",
-      "myql"
-    ],
-    "tool_nginx": [
-      "Ngnix"
+      "团队协作能力",
+      "团队合作和沟通协作能力",
+      "团队合作",
+      "团队沟通与协作能力"
     ],
     "soft_self_learning": [
       "自主学习能力",
       "自我学习能力"
     ],
-    "knowledge_algorithms": [
-      "算法设计",
-      "算法基础"
+    "tool_mysql": [
+      "myql",
+      "Mysql数据库"
+    ],
+    "soft_communication": [
+      "沟通表达能力",
+      "表达与沟通能力",
+      "表达和沟通能力",
+      "交流沟通能力",
+      "沟通交流",
+      "沟通能力",
+      "沟通交流能力强"
+    ],
+    "skill_cpp": [
+      "C/C++"
+    ],
+    "knowledge_system_design": [
+      "系统架构设计能力",
+      "系统架构设计",
+      "系统的架构设计",
+      "系统总体架构设计"
     ],
     "tool_linux": [
-      "Linux/UNIX操作系统"
+      "Linux/UNIX操作系统",
+      "linux系统"
     ],
     "soft_documentation": [
       "文档规范习惯"
+    ],
+    "soft_business_understanding": [
+      "业务理解能力",
+      "业务理解及分析能力"
+    ],
+    "tool_nginx": [
+      "Ngnix"
+    ],
+    "knowledge_operating_systems": [
+      "linux操作系统"
+    ],
+    "knowledge_statistics": [
+      "统计分析"
+    ],
+    "knowledge_networks": [
+      "计算机网络技术"
+    ],
+    "project_data_warehouse": [
+      "数据仓库原理及架构",
+      "数据仓库建设方法论",
+      "数据仓库架构"
+    ],
+    "knowledge_data_structures": [
+      "数据结构设计",
+      "基础数据结构"
+    ],
+    "skill_javascript": [
+      "javascript/jquery"
+    ],
+    "knowledge_data_warehouse_modeling": [
+      "数据仓库模型设计"
+    ],
+    "skill_kotlin": [
+      "coradva"
     ]
   }
 }

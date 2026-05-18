@@ -1,0 +1,766 @@
+{
+  "generated_at": "2026-05-18",
+  "pipeline_version": "v1.0.0",
+  "data_summary": {
+    "fairCV_docs": 700,
+    "jd_docs": 588,
+    "total_sentences": 72139,
+    "total_mentions": 24776
+  },
+  "precision": {
+    "sampled": 100,
+    "correct_by_alias_match": 84,
+    "precision_estimate": 0.84,
+    "note": "别名精确命中数（alias in dict）/ 总抽样数，上限估计 L1 精确率"
+  },
+  "recall": {
+    "entities_evaluated": 104,
+    "avg_recall": 0.7759,
+    "top_records": [
+      {
+        "entity_id": "interest_security",
+        "text_count": 2140,
+        "mention_count": 2037,
+        "recall": 0.9519
+      },
+      {
+        "entity_id": "knowledge_algorithms",
+        "text_count": 1597,
+        "mention_count": 1598,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "interest_frontend",
+        "text_count": 1280,
+        "mention_count": 1452,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "skill_python",
+        "text_count": 1100,
+        "mention_count": 1098,
+        "recall": 0.9982
+      },
+      {
+        "entity_id": "skill_java",
+        "text_count": 1057,
+        "mention_count": 678,
+        "recall": 0.6414
+      },
+      {
+        "entity_id": "skill_sql",
+        "text_count": 1009,
+        "mention_count": 295,
+        "recall": 0.2924
+      },
+      {
+        "entity_id": "interest_research",
+        "text_count": 916,
+        "mention_count": 921,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "interest_ml",
+        "text_count": 804,
+        "mention_count": 381,
+        "recall": 0.4739
+      },
+      {
+        "entity_id": "knowledge_data_structures",
+        "text_count": 784,
+        "mention_count": 783,
+        "recall": 0.9987
+      },
+      {
+        "entity_id": "soft_communication",
+        "text_count": 756,
+        "mention_count": 767,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "knowledge_system_design",
+        "text_count": 699,
+        "mention_count": 803,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "soft_documentation",
+        "text_count": 660,
+        "mention_count": 603,
+        "recall": 0.9136
+      },
+      {
+        "entity_id": "tool_elasticsearch",
+        "text_count": 638,
+        "mention_count": 9,
+        "recall": 0.0141
+      },
+      {
+        "entity_id": "knowledge_operating_systems",
+        "text_count": 598,
+        "mention_count": 38,
+        "recall": 0.0635
+      },
+      {
+        "entity_id": "tool_mysql",
+        "text_count": 590,
+        "mention_count": 589,
+        "recall": 0.9983
+      },
+      {
+        "entity_id": "tool_git",
+        "text_count": 589,
+        "mention_count": 223,
+        "recall": 0.3786
+      },
+      {
+        "entity_id": "interest_data",
+        "text_count": 578,
+        "mention_count": 788,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "skill_javascript",
+        "text_count": 541,
+        "mention_count": 584,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "interest_devops",
+        "text_count": 541,
+        "mention_count": 538,
+        "recall": 0.9945
+      },
+      {
+        "entity_id": "interest_backend",
+        "text_count": 529,
+        "mention_count": 554,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "project_microservice",
+        "text_count": 460,
+        "mention_count": 108,
+        "recall": 0.2348
+      },
+      {
+        "entity_id": "project_recommendation_system",
+        "text_count": 403,
+        "mention_count": 303,
+        "recall": 0.7519
+      },
+      {
+        "entity_id": "knowledge_microservice_architecture",
+        "text_count": 353,
+        "mention_count": 353,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "knowledge_networks",
+        "text_count": 312,
+        "mention_count": 312,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "tool_linux",
+        "text_count": 309,
+        "mention_count": 307,
+        "recall": 0.9935
+      },
+      {
+        "entity_id": "tool_spring_boot",
+        "text_count": 283,
+        "mention_count": 239,
+        "recall": 0.8445
+      },
+      {
+        "entity_id": "tool_opencv",
+        "text_count": 257,
+        "mention_count": 257,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "language_english_reading",
+        "text_count": 256,
+        "mention_count": 324,
+        "recall": 1.0
+      },
+      {
+        "entity_id": "skill_swift",
+        "text_count": 253,
+        "mention_count": 203,
+        "recall": 0.8024
+      },
+      {
+        "entity_id": "tool_scikit_learn",
+        "text_count": 252,
+        "mention_count": 252,
+        "recall": 1.0
+      }
+    ]
+  },
+  "ablation": {
+    "l1_only": {
+      "mentions": 22674,
+      "unique_entities": 111,
+      "precision_est": 0.95
+    },
+    "l1_plus_l2_confirmed": {
+      "mentions": 22756,
+      "unique_entities": 111,
+      "l2_new_entities": 0,
+      "precision_est": 0.88
+    },
+    "l2_candidate_new_surfaces": {
+      "surfaces": 1290,
+      "status_dist": {
+        "rule_match": 22674,
+        "needs_review": 393,
+        "auto_confirmed": 82,
+        "llm_candidate": 1627
+      },
+      "method_dist": {
+        "alias_exact": 22228,
+        "llm_extracted": 2020,
+        "embedding_high": 82,
+        "phrase_rule": 446
+      }
+    },
+    "full_pipeline": {
+      "total_mentions": 24776,
+      "unique_entities_known": 111,
+      "unique_surfaces_new": 1290,
+      "needs_review_queue": 393
+    }
+  },
+  "role_coverage": {
+    "avg_coverage": 0.6844,
+    "roles_analyzed": 47
+  },
+  "entity_discovery": {
+    "new_entity_clusters": 45,
+    "new_nodes_added": 14,
+    "needs_review_queue": 7
+  },
+  "role_coverage_detail": {
+    "roles_analyzed": 47,
+    "avg_coverage": 0.6844,
+    "lowest_coverage": [
+      {
+        "role_id": "role_frontend_engineer",
+        "role_name": "前端工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_ui_polish"
+        ]
+      },
+      {
+        "role_id": "role_ml_engineer",
+        "role_name": "机器学习工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_math_theory"
+        ]
+      },
+      {
+        "role_id": "role_ai_application_engineer",
+        "role_name": "AI 应用工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_research_uncertainty"
+        ]
+      },
+      {
+        "role_id": "role_devops_engineer",
+        "role_name": "DevOps 工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_oncall"
+        ]
+      },
+      {
+        "role_id": "role_sre_engineer",
+        "role_name": "SRE 工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_oncall"
+        ]
+      }
+    ],
+    "highest_coverage": [
+      {
+        "role_id": "role_iot_engineer",
+        "role_name": "IoT 工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_cloud_security_engineer",
+        "role_name": "云安全工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_appsec_engineer",
+        "role_name": "应用安全工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_penetration_tester",
+        "role_name": "渗透测试工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_llm_application_engineer",
+        "role_name": "大模型应用工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      }
+    ],
+    "all_roles": [
+      {
+        "role_id": "role_frontend_engineer",
+        "role_name": "前端工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_ui_polish"
+        ]
+      },
+      {
+        "role_id": "role_ml_engineer",
+        "role_name": "机器学习工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_math_theory"
+        ]
+      },
+      {
+        "role_id": "role_ai_application_engineer",
+        "role_name": "AI 应用工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_research_uncertainty"
+        ]
+      },
+      {
+        "role_id": "role_devops_engineer",
+        "role_name": "DevOps 工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_oncall"
+        ]
+      },
+      {
+        "role_id": "role_sre_engineer",
+        "role_name": "SRE 工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "constraint_dislike_oncall"
+        ]
+      },
+      {
+        "role_id": "role_platform_engineer",
+        "role_name": "平台工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "interest_stable_delivery"
+        ]
+      },
+      {
+        "role_id": "role_release_engineer",
+        "role_name": "发布工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "interest_stable_delivery"
+        ]
+      },
+      {
+        "role_id": "role_performance_test_engineer",
+        "role_name": "性能测试工程师",
+        "required_evidence": 1,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "interest_stable_delivery"
+        ]
+      },
+      {
+        "role_id": "role_qa_platform_engineer",
+        "role_name": "质量平台工程师",
+        "required_evidence": 2,
+        "covered_evidence": 0,
+        "coverage": 0.0,
+        "missing_evidence": [
+          "interest_infra_automation",
+          "interest_stable_delivery"
+        ]
+      },
+      {
+        "role_id": "role_embedded_engineer",
+        "role_name": "嵌入式工程师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "constraint_dislike_low_level_debugging"
+        ]
+      },
+      {
+        "role_id": "role_react_frontend_engineer",
+        "role_name": "React 前端工程师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "constraint_dislike_ui_polish"
+        ]
+      },
+      {
+        "role_id": "role_vue_frontend_engineer",
+        "role_name": "Vue 前端工程师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "constraint_dislike_ui_polish"
+        ]
+      },
+      {
+        "role_id": "role_ml_platform_engineer",
+        "role_name": "机器学习平台工程师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "interest_infra_automation"
+        ]
+      },
+      {
+        "role_id": "role_mlops_engineer",
+        "role_name": "MLOps 工程师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "interest_stable_delivery"
+        ]
+      },
+      {
+        "role_id": "role_cloud_platform_engineer",
+        "role_name": "云平台工程师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "interest_infra_automation"
+        ]
+      },
+      {
+        "role_id": "role_observability_engineer",
+        "role_name": "可观测平台工程师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "interest_stable_delivery"
+        ]
+      },
+      {
+        "role_id": "role_soc_analyst",
+        "role_name": "SOC 分析师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "interest_stable_delivery"
+        ]
+      },
+      {
+        "role_id": "role_firmware_engineer",
+        "role_name": "固件工程师",
+        "required_evidence": 2,
+        "covered_evidence": 1,
+        "coverage": 0.5,
+        "missing_evidence": [
+          "constraint_dislike_low_level_debugging"
+        ]
+      },
+      {
+        "role_id": "role_frontend_interaction_engineer",
+        "role_name": "前端交互工程师",
+        "required_evidence": 3,
+        "covered_evidence": 2,
+        "coverage": 0.6667,
+        "missing_evidence": [
+          "constraint_dislike_ui_polish"
+        ]
+      },
+      {
+        "role_id": "role_recommendation_algorithm_engineer",
+        "role_name": "推荐算法工程师",
+        "required_evidence": 3,
+        "covered_evidence": 2,
+        "coverage": 0.6667,
+        "missing_evidence": [
+          "constraint_dislike_math_theory"
+        ]
+      },
+      {
+        "role_id": "role_nlp_engineer",
+        "role_name": "NLP 工程师",
+        "required_evidence": 3,
+        "covered_evidence": 2,
+        "coverage": 0.6667,
+        "missing_evidence": [
+          "constraint_dislike_math_theory"
+        ]
+      },
+      {
+        "role_id": "role_computer_vision_engineer",
+        "role_name": "计算机视觉工程师",
+        "required_evidence": 3,
+        "covered_evidence": 2,
+        "coverage": 0.6667,
+        "missing_evidence": [
+          "constraint_dislike_math_theory"
+        ]
+      },
+      {
+        "role_id": "role_backend_engineer",
+        "role_name": "后端开发工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_python_backend_engineer",
+        "role_name": "Python 后端工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_java_backend_engineer",
+        "role_name": "Java 后端工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_data_engineer",
+        "role_name": "数据工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_data_analyst",
+        "role_name": "数据分析师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_mobile_engineer",
+        "role_name": "移动端工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_go_backend_engineer",
+        "role_name": "Go 后端工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_nodejs_backend_engineer",
+        "role_name": "Node.js 后端工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_php_backend_engineer",
+        "role_name": "PHP 后端工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_rust_backend_engineer",
+        "role_name": "Rust 服务工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_microservice_engineer",
+        "role_name": "微服务工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_api_platform_engineer",
+        "role_name": "接口平台工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_android_engineer",
+        "role_name": "Android 工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_ios_engineer",
+        "role_name": "iOS 工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_cross_platform_engineer",
+        "role_name": "跨端应用工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_batch_data_engineer",
+        "role_name": "离线数据工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_realtime_data_engineer",
+        "role_name": "实时数据工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_data_warehouse_engineer",
+        "role_name": "数据仓库工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_analytics_engineer",
+        "role_name": "分析工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_bi_engineer",
+        "role_name": "BI 工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_llm_application_engineer",
+        "role_name": "大模型应用工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_penetration_tester",
+        "role_name": "渗透测试工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_appsec_engineer",
+        "role_name": "应用安全工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_cloud_security_engineer",
+        "role_name": "云安全工程师",
+        "required_evidence": 2,
+        "covered_evidence": 2,
+        "coverage": 1.0,
+        "missing_evidence": []
+      },
+      {
+        "role_id": "role_iot_engineer",
+        "role_name": "IoT 工程师",
+        "required_evidence": 1,
+        "covered_evidence": 1,
+        "coverage": 1.0,
+        "missing_evidence": []
+      }
+    ]
+  }
+}

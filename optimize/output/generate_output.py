@@ -150,6 +150,7 @@ def generate_skills(min_cluster_size: int = 3) -> dict[str, Any]:
             "description": f"{canonical_name} — 由语料挖掘新增（原始词面：{', '.join(surfaces[:3])}）",
             "origin":      "extracted",
             "source_note": f"cluster_id={cluster['cluster_id']} size={cluster['size']}",
+            "review_status": "needs_review",
         }
 
         # 归入对应 category

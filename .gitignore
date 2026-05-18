@@ -30,3 +30,5 @@ apikey.txt
 optimize/CN_skillspan_lkst_test.json
 optimize/CN_skillspan_lkst_train.json
 optimize/esco/
+
+tests/

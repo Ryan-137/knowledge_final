@@ -8,7 +8,15 @@
         "py"
       ],
       "description": "Python 编程技能。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d",
+          "label": "Python (computer programming)",
+          "similarity": 0.7871
+        }
+      ]
     },
     {
       "id": "skill_java",
@@ -27,7 +35,15 @@
         "cpp"
       ],
       "description": "C++ 编程技能。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f",
+          "label": "C++",
+          "similarity": 0.763
+        }
+      ]
     },
     {
       "id": "skill_c",
@@ -57,7 +73,15 @@
         "ts"
       ],
       "description": "TypeScript 编程技能。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/867137fb-ff1b-4ca3-99f3-cb6969aa2c68",
+          "label": "TypeScript",
+          "similarity": 0.8333
+        }
+      ]
     },
     {
       "id": "skill_golang",
@@ -85,7 +109,15 @@
         "sql"
       ],
       "description": "SQL 查询与建模技能。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/c062bab3-3ea0-4291-9220-a2d8fef4bead",
+          "label": "SQL Server",
+          "similarity": 0.7831
+        }
+      ]
     },
     {
       "id": "skill_bash",
@@ -105,7 +137,15 @@
         "kotlin"
       ],
       "description": "Kotlin 开发技能。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/af7ae54f-4649-4c16-87c7-59ba41d4d57f",
+          "label": "SPARK",
+          "similarity": 0.8399
+        }
+      ]
     },
     {
       "id": "skill_swift",
@@ -114,7 +154,15 @@
         "swift"
       ],
       "description": "Swift 开发技能。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/be80acfc-b6f2-4411-9b8d-b19d9cd2556a",
+          "label": "Swift (computer programming)",
+          "similarity": 0.8102
+        }
+      ]
     },
     {
       "id": "skill_csharp",
@@ -124,7 +172,15 @@
         "csharp"
       ],
       "description": "C# 开发技能。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/4c016b68-4116-468c-9dc6-42710c239e4a",
+          "label": "C#",
+          "similarity": 0.8264
+        }
+      ]
     },
     {
       "id": "skill_php",
@@ -151,7 +207,31 @@
         "scala"
       ],
       "description": "Scala 语言技能。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/ffddfc7c-a9dd-449f-9e96-882dc447c8b6",
+          "label": "Scala",
+          "similarity": 0.8418
+        }
+      ]
+    },
+    {
+      "id": "skill_html",
+      "name": "Html",
+      "aliases": [
+        "html/css/javascript",
+        "xhtml",
+        "css",
+        "html5+css",
+        "css3",
+        "html5"
+      ],
+      "description": "Html — 由语料挖掘新增（原始词面：html, css, html5）",
+      "origin": "extracted",
+      "source_note": "cluster_id=1 size=7",
+      "review_status": "needs_review"
     }
   ],
   "tool": [
@@ -325,6 +405,12 @@
       "origin": "canonical",
       "external_refs": [
         {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/449d119b-2d66-43a9-9230-7d27f16afbb6",
+          "label": "Xcode",
+          "similarity": 0.9162
+        },
+        {
           "source": "onet",
           "tool_name": "Xcode",
           "category": "Development environment software",
@@ -446,7 +532,15 @@
         "postgres"
       ],
       "description": "PostgreSQL 数据库经验。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/a8d07b5a-c1a1-42c6-9d53-db9c7a2ca996",
+          "label": "PostgreSQL",
+          "similarity": 0.9763
+        }
+      ]
     },
     {
       "id": "tool_redis",
@@ -660,7 +754,15 @@
         "pytest"
       ],
       "description": "Pytest 自动化测试经验。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/af7ae54f-4649-4c16-87c7-59ba41d4d57f",
+          "label": "SPARK",
+          "similarity": 0.7911
+        }
+      ]
     },
     {
       "id": "tool_jmeter",
@@ -696,7 +798,27 @@
         "wireshark"
       ],
       "description": "Wireshark 抓包分析经验。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/8fa510d0-a8a6-4932-a361-00f8442cfe23",
+          "label": "Wireshark",
+          "similarity": 0.8825
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/968bb301-faa1-44aa-a7c9-75d1f7a43b3f",
+          "label": "bend wire",
+          "similarity": 0.8013
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/374ff115-fc97-4b64-afc1-86ef14a25e4d",
+          "label": "seal wires",
+          "similarity": 0.7869
+        }
+      ]
     },
     {
       "id": "tool_nmap",
@@ -756,105 +878,93 @@
       "origin": "canonical"
     },
     {
-      "id": "tool_n2",
-      "name": "日语n2",
+      "id": "tool_openstack",
+      "name": "Openstack",
       "aliases": [
-        "普通话",
-        "深圳证券市场",
-        "中国证券期货业南方信息技术中心",
-        "深圳证券通信网",
-        "深圳证券交易所",
-        "日语"
-      ],
-      "description": "日语n2 — 由语料挖掘新增（原始词面：日语n2, 可以看懂日语文档, 日语）",
-      "origin": "extracted",
-      "source_note": "cluster_id=38 size=10"
-    },
-    {
-      "id": "tool_html",
-      "name": "Html",
-      "aliases": [
-        "css3",
-        "html5+css",
-        "html/css/javascript",
-        "css",
-        "xhtml",
-        "html5"
-      ],
-      "description": "Html — 由语料挖掘新增（原始词面：html, css, html5）",
-      "origin": "extracted",
-      "source_note": "cluster_id=1 size=7"
-    },
-    {
-      "id": "tool_openshift",
-      "name": "Openshift",
-      "aliases": [
+        "opengl",
+        "openshift",
         "openvswitch",
-        "openflow",
-        "openstack",
-        "opengl"
+        "openflow"
       ],
-      "description": "Openshift — 由语料挖掘新增（原始词面：openshift, openflow, openvswitch）",
+      "description": "Openstack — 由语料挖掘新增（原始词面：openstack, openstack云平台, openshift）",
       "origin": "extracted",
-      "source_note": "cluster_id=3 size=6"
+      "source_note": "cluster_id=16 size=6",
+      "review_status": "needs_review"
     },
     {
-      "id": "tool_j2ee",
-      "name": "j2ee",
+      "id": "tool_lstm",
+      "name": "Lstm",
       "aliases": [
-        "java/j2ee",
-        "j2ee规范"
+        "lnmp",
+        "lnmp开发"
       ],
-      "description": "j2ee — 由语料挖掘新增（原始词面：j2ee, j2ee开发模式, 基于j2ee的b/s结构的系统开发）",
+      "description": "Lstm — 由语料挖掘新增（原始词面：lstm, lnmp开发, lnmp开发环境）",
       "origin": "extracted",
-      "source_note": "cluster_id=8 size=6"
-    },
-    {
-      "id": "tool_lnmp",
-      "name": "Lnmp",
-      "aliases": [
-        "lnmp开发",
-        "lstm"
-      ],
-      "description": "Lnmp — 由语料挖掘新增（原始词面：lnmp开发, lnmp开发环境, lnmp）",
-      "origin": "extracted",
-      "source_note": "cluster_id=4 size=4"
-    },
-    {
-      "id": "tool_jquery",
-      "name": "Jquery",
-      "aliases": [
-        "jquery ui",
-        "jquery-ui",
-        "jquery easy ui"
-      ],
-      "description": "Jquery — 由语料挖掘新增（原始词面：jquery, jquery ui, jquery-ui）",
-      "origin": "extracted",
-      "source_note": "cluster_id=10 size=4"
+      "source_note": "cluster_id=27 size=4",
+      "review_status": "needs_review"
     },
     {
       "id": "tool_oracle",
       "name": "Oracle",
       "aliases": [
+        "oracle数据库体系结构",
         "oracle金银牌",
-        "oracle数据库",
-        "oracle数据库体系结构"
+        "oracle数据库"
       ],
       "description": "Oracle — 由语料挖掘新增（原始词面：oracle, oracle金银牌, oracle数据库）",
       "origin": "extracted",
-      "source_note": "cluster_id=11 size=4"
+      "source_note": "cluster_id=13 size=4",
+      "review_status": "needs_review"
     },
     {
       "id": "tool_3d",
-      "name": "3d图形学原理",
+      "name": "3d打印",
       "aliases": [
         "3d打印数据处理软件",
         "3d几何学",
-        "3d打印"
+        "3d图形学原理"
       ],
-      "description": "3d图形学原理 — 由语料挖掘新增（原始词面：3d图形学原理, 3d几何学, 3d打印）",
+      "description": "3d打印 — 由语料挖掘新增（原始词面：3d打印, 3d打印数据处理软件, 3d图形学原理）",
       "origin": "extracted",
-      "source_note": "cluster_id=31 size=4"
+      "source_note": "cluster_id=17 size=4",
+      "review_status": "needs_review"
+    },
+    {
+      "id": "tool_jquery",
+      "name": "Jquery",
+      "aliases": [
+        "jquery-ui",
+        "jquery ui",
+        "jquery easy ui"
+      ],
+      "description": "Jquery — 由语料挖掘新增（原始词面：jquery, jquery ui, jquery-ui）",
+      "origin": "extracted",
+      "source_note": "cluster_id=18 size=4",
+      "review_status": "needs_review"
+    },
+    {
+      "id": "tool_ps",
+      "name": "Ps",
+      "aliases": [
+        "ssh",
+        "ssh框架"
+      ],
+      "description": "Ps — 由语料挖掘新增（原始词面：ps, ssh框架, ssh）",
+      "origin": "extracted",
+      "source_note": "cluster_id=42 size=3",
+      "review_status": "needs_review"
+    },
+    {
+      "id": "tool_asp_net",
+      "name": "asp.net",
+      "aliases": [
+        "asp.net webapi",
+        "asp.net core"
+      ],
+      "description": "asp.net — 由语料挖掘新增（原始词面：asp.net, asp.net core, asp.net webapi）",
+      "origin": "extracted",
+      "source_note": "cluster_id=11 size=3",
+      "review_status": "needs_review"
     },
     {
       "id": "tool_yii",
@@ -865,40 +975,32 @@
       ],
       "description": "yii框架 — 由语料挖掘新增（原始词面：yii框架, 系统框架, ci框架）",
       "origin": "extracted",
-      "source_note": "cluster_id=22 size=3"
+      "source_note": "cluster_id=37 size=3",
+      "review_status": "needs_review"
     },
     {
       "id": "tool_springmvc",
       "name": "Springmvc",
       "aliases": [
-        "spring core",
-        "spring mvc"
+        "spring mvc",
+        "spring core"
       ],
       "description": "Springmvc — 由语料挖掘新增（原始词面：springmvc, spring mvc, spring core）",
       "origin": "extracted",
-      "source_note": "cluster_id=12 size=3"
-    },
-    {
-      "id": "tool_ps",
-      "name": "Ps",
-      "aliases": [
-        "ssh框架",
-        "ssh"
-      ],
-      "description": "Ps — 由语料挖掘新增（原始词面：ssh框架, ps, ssh）",
-      "origin": "extracted",
-      "source_note": "cluster_id=28 size=3"
+      "source_note": "cluster_id=31 size=3",
+      "review_status": "needs_review"
     },
     {
       "id": "tool_hibernate",
       "name": "Hibernate",
       "aliases": [
-        "hibernate/ibatis",
-        "hibernate框架"
+        "hibernate框架",
+        "hibernate/ibatis"
       ],
-      "description": "Hibernate — 由语料挖掘新增（原始词面：hibernate, hibernate框架, hibernate/ibatis）",
+      "description": "Hibernate — 由语料挖掘新增（原始词面：hibernate, hibernate/ibatis, hibernate框架）",
       "origin": "extracted",
-      "source_note": "cluster_id=18 size=3"
+      "source_note": "cluster_id=34 size=3",
+      "review_status": "needs_review"
     },
     {
       "id": "tool_hybrid_app",
@@ -908,7 +1010,8 @@
       ],
       "description": "hybrid app — 由语料挖掘新增（原始词面：hybrid app, hybridstart, hybrid混合模式开发）",
       "origin": "extracted",
-      "source_note": "cluster_id=26 size=3"
+      "source_note": "cluster_id=40 size=3",
+      "review_status": "needs_review"
     },
     {
       "id": "tool_springcloud",
@@ -918,29 +1021,20 @@
       ],
       "description": "Springcloud — 由语料挖掘新增（原始词面：springcloud, spring-cloud, spring cloud微服务）",
       "origin": "extracted",
-      "source_note": "cluster_id=27 size=3"
+      "source_note": "cluster_id=41 size=3",
+      "review_status": "needs_review"
     },
     {
       "id": "tool_qt4_6",
       "name": "qt4.6",
       "aliases": [
-        "qt图形库",
-        "qtcreators"
+        "qtcreators",
+        "qt图形库"
       ],
       "description": "qt4.6 — 由语料挖掘新增（原始词面：qt4.6, qt图形库, qtcreators）",
       "origin": "extracted",
-      "source_note": "cluster_id=33 size=3"
-    },
-    {
-      "id": "tool_asp_net_core",
-      "name": "asp.net core",
-      "aliases": [
-        "asp.net webapi",
-        "asp.net"
-      ],
-      "description": "asp.net core — 由语料挖掘新增（原始词面：asp.net core, asp.net webapi, asp.net）",
-      "origin": "extracted",
-      "source_note": "cluster_id=34 size=3"
+      "source_note": "cluster_id=44 size=3",
+      "review_status": "needs_review"
     }
   ],
   "language": [
@@ -956,7 +1050,27 @@
         "technical english"
       ],
       "description": "阅读英文技术资料与英文界面的能力。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/7ce196c4-65c5-4aa0-88a2-9ab08eb9fd49",
+          "label": "academic English",
+          "similarity": 0.8274
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/7ee20fe2-facd-4cc5-837b-927429e0e7ac",
+          "label": "understand written English",
+          "similarity": 0.7781
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/64ff8d5f-58a8-4efb-af5a-e161854b3e9a",
+          "label": "understand spoken English",
+          "similarity": 0.7628
+        }
+      ]
     }
   ],
   "knowledge": [
@@ -968,7 +1082,15 @@
         "数据结构"
       ],
       "description": "数据结构理论基础。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/03ff0d53-573a-47a0-a0ad-1995815a4339",
+          "label": "information structure",
+          "similarity": 0.8144
+        }
+      ]
     },
     {
       "id": "knowledge_algorithms",
@@ -978,7 +1100,15 @@
         "算法"
       ],
       "description": "算法设计与复杂度基础。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/54924a2c-daca-40d3-9716-4b38ceb04f38",
+          "label": "algorithms",
+          "similarity": 0.8239
+        }
+      ]
     },
     {
       "id": "knowledge_oop",
@@ -998,7 +1128,27 @@
         "数据库原理"
       ],
       "description": "数据库原理基础。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/29fb0fb5-dfc4-4098-ac9b-3a712000f48f",
+          "label": "manage database",
+          "similarity": 0.8713
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/4463a721-69f3-413d-8321-43e3af13a4f1",
+          "label": "use databases",
+          "similarity": 0.7667
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/43ae58b9-5e56-4524-b45a-b422777a0576",
+          "label": "database",
+          "similarity": 0.7605
+        }
+      ]
     },
     {
       "id": "knowledge_operating_systems",
@@ -1080,7 +1230,27 @@
         "系统设计"
       ],
       "description": "系统设计基础。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/fae27053-8924-4bfd-b565-c9fe502044c9",
+          "label": "system design",
+          "similarity": 0.952
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/d560df46-dda4-4407-bab2-b87353a96814",
+          "label": "design control systems",
+          "similarity": 0.761
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/a47d194d-0ffd-4aaa-b695-fbbe0255000e",
+          "label": "design information system",
+          "similarity": 0.7533
+        }
+      ]
     },
     {
       "id": "knowledge_math_foundation",
@@ -1091,7 +1261,15 @@
         "数学基础"
       ],
       "description": "数学基础。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/55e910e4-736d-44cf-bfa9-b15adc5d91d2",
+          "label": "algebra",
+          "similarity": 0.7526
+        }
+      ]
     },
     {
       "id": "knowledge_technical_documentation",
@@ -1105,7 +1283,15 @@
         "英文技术文档"
       ],
       "description": "阅读官方文档、英文教程与 API 说明的知识基础。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/cffc3e97-e942-4b13-a2f3-0bf4910c06d3",
+          "label": "use technical documentation",
+          "similarity": 0.784
+        }
+      ]
     },
     {
       "id": "knowledge_distributed_systems",
@@ -1211,7 +1397,15 @@
         "界面交互"
       ],
       "description": "界面交互基础知识。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/f6868852-9bf6-4899-a5d6-5f9532fb877d",
+          "label": "design component interfaces",
+          "similarity": 0.7574
+        }
+      ]
     },
     {
       "id": "knowledge_mobile_architecture",
@@ -1318,6 +1512,12 @@
       "origin": "canonical",
       "external_refs": [
         {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/484df271-bb52-49f1-8f50-f19624bf4df2",
+          "label": "software components libraries",
+          "similarity": 0.7996
+        },
+        {
           "source": "onet",
           "tool_name": "Component libraries",
           "category": "Development environment software",
@@ -1372,7 +1572,15 @@
         "实时链路"
       ],
       "description": "实时链路项目经验。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/bf6c5ed4-84af-440f-abcc-7fa5ba19c738",
+          "label": "real-time computing",
+          "similarity": 0.7649
+        }
+      ]
     },
     {
       "id": "project_dashboard",
@@ -1432,7 +1640,15 @@
         "推荐系统"
       ],
       "description": "推荐系统项目经验。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/505e4ef3-7ce4-437d-b7b4-5c608f71c258",
+          "label": "build recommender systems",
+          "similarity": 0.766
+        }
+      ]
     },
     {
       "id": "project_test_automation",
@@ -1451,10 +1667,16 @@
           "similarity": 0.866
         },
         {
-          "source": "onet",
-          "tool_name": "SmartBear Software AutomatedQA TestComplete",
-          "category": "Program testing software",
-          "similarity": 0.7531
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/6a322874-e32f-4cd8-9683-badce67a7f73",
+          "label": "develop automated software tests",
+          "similarity": 0.8106
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/7557f0f4-b8bc-4ac0-b91e-222ab1ba744f",
+          "label": "tools for ICT test automation",
+          "similarity": 0.7922
         }
       ]
     },
@@ -1469,10 +1691,22 @@
       "origin": "canonical",
       "external_refs": [
         {
-          "source": "onet",
-          "tool_name": "Performance Systems Development TREAT",
-          "category": "Analytical or scientific software",
-          "similarity": 0.768
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/2687dc6e-b245-477a-a115-7abeb7134b78",
+          "label": "performance diagnosis",
+          "similarity": 0.7905
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/bbd57056-80e0-45bb-a2c1-658ed99a1251",
+          "label": "conduct performance tests",
+          "similarity": 0.7834
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/5038b9bb-5eb0-4156-93c2-16ae1a299d65",
+          "label": "guide analysis of a recorded performance",
+          "similarity": 0.7711
         }
       ]
     },
@@ -1578,6 +1812,12 @@
       "origin": "canonical",
       "external_refs": [
         {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/3ec2e4d6-7000-4905-bf1a-c5b1679416de",
+          "label": "data warehouse",
+          "similarity": 0.838
+        },
+        {
           "source": "onet",
           "tool_name": "Data warehouse software",
           "category": "Data mining software",
@@ -1620,7 +1860,15 @@
         "data"
       ],
       "description": "数据方向偏好。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/edebd83d-35f6-4ed5-a940-6c203d178c01",
+          "label": "data science",
+          "similarity": 0.758
+        }
+      ]
     },
     {
       "id": "interest_ml",
@@ -1632,7 +1880,21 @@
         "算法方向"
       ],
       "description": "机器学习方向偏好。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/8369c2d6-c100-4cf6-bd83-9668d8678433",
+          "label": "utilise machine learning",
+          "similarity": 0.7766
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/3a2d5b45-56e4-4f5a-a55a-4a4a65afdc43",
+          "label": "machine learning",
+          "similarity": 0.763
+        }
+      ]
     },
     {
       "id": "interest_devops",
@@ -1772,7 +2034,21 @@
         "沟通"
       ],
       "description": "沟通表达能力。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/15d76317-c71a-4fa2-aadc-2ecc34e627b7",
+          "label": "communication",
+          "similarity": 0.8054
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/477579e7-e0ca-4cc5-8712-17b78d0d8d2a",
+          "label": "communication studies",
+          "similarity": 0.7953
+        }
+      ]
     },
     {
       "id": "soft_teamwork",
@@ -1782,7 +2058,27 @@
         "协作"
       ],
       "description": "团队协作能力。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/a5b0cd5c-e13a-4ab3-8d93-4d242adcfb01",
+          "label": "teamwork principles",
+          "similarity": 0.7985
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/60c78287-22eb-4103-9c8c-28deaa460da0",
+          "label": "work in teams",
+          "similarity": 0.7933
+        },
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/229b10cf-6f3a-490c-9706-01c107df0562",
+          "label": "facilitate teamwork between students",
+          "similarity": 0.7912
+        }
+      ]
     },
     {
       "id": "soft_self_learning",
@@ -1833,7 +2129,15 @@
         "业务理解"
       ],
       "description": "业务理解能力。",
-      "origin": "canonical"
+      "origin": "canonical",
+      "external_refs": [
+        {
+          "source": "esco",
+          "uri": "http://data.europa.eu/esco/skill/3cb68bb2-66fc-495a-af82-012338a9402b",
+          "label": "interpret business information",
+          "similarity": 0.7756
+        }
+      ]
     },
     {
       "id": "soft_mentoring",
