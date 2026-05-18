@@ -30,6 +30,7 @@ Usage
     python -m optimize.data_collection.fetch_external_standards
     python -m optimize.data_collection.fetch_external_standards --skip-esco
     python -m optimize.data_collection.fetch_external_standards --esco-zip /path/to/local.zip
+    python -m optimize.data_collection.fetch_external_standards --esco-dir optimize/esco
 """
 
 from __future__ import annotations
@@ -40,6 +41,7 @@ import io
 import zipfile
 from datetime import date
 from pathlib import Path
+from shutil import copyfile
 
 import requests
 
@@ -62,12 +64,14 @@ _ONET_TECH_URL = (
 def fetch_esco(
     output_dir: Path | None = None,
     local_zip: Path | None = None,
+    local_dir: Path | None = None,
 ) -> int:
     """Download (or read locally) the ESCO skills CSV and build a lookup index.
 
     Args:
         output_dir: Where to write the index (default: data/raw/external/esco).
         local_zip: Path to a pre-downloaded ESCO ZIP file (skips the download).
+        local_dir: Path to an extracted ESCO CSV directory containing skills_en.csv.
 
     Returns:
         Number of skill entries in the index.
@@ -76,7 +80,14 @@ def fetch_esco(
     ensure_dir(out_dir)
     csv_path = out_dir / "skills.csv"
 
-    if local_zip is not None:
+    if local_dir is not None:
+        src_csv = local_dir / "skills_en.csv"
+        if not src_csv.exists():
+            raise FileNotFoundError(f"ESCO directory missing skills_en.csv: {src_csv}")
+        logger.info("Using local ESCO directory: %s", local_dir)
+        copyfile(src_csv, csv_path)
+        zip_bytes = None
+    elif local_zip is not None:
         zip_bytes = local_zip.read_bytes()
         logger.info("Using local ESCO ZIP: %s", local_zip)
     elif csv_path.exists():
@@ -118,6 +129,8 @@ def fetch_esco(
                 "uri":             uri,
                 "preferred_label": pref,
                 "alt_labels":      alts,
+                "skill_type":      row.get("skillType", "").strip(),
+                "reuse_level":     row.get("reuseLevel", "").strip(),
                 "description":     row.get("description", "").strip()[:300],
             })
 
@@ -216,13 +229,17 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument("--skip-onet", action="store_true", help="Skip O*NET download")
     p.add_argument("--esco-zip", type=Path, default=None,
                    help="Use a locally downloaded ESCO ZIP instead of fetching from URL")
+    p.add_argument("--esco-dir", type=Path, default=None,
+                   help="Use an extracted ESCO CSV directory containing skills_en.csv")
     return p.parse_args()
 
 
 if __name__ == "__main__":
     args = _parse_args()
     if not args.skip_esco:
-        n = fetch_esco(local_zip=args.esco_zip)
+        if args.esco_zip and args.esco_dir:
+            raise SystemExit("--esco-zip and --esco-dir cannot be used together")
+        n = fetch_esco(local_zip=args.esco_zip, local_dir=args.esco_dir)
         print(f"ESCO: {n} skills.")
     if not args.skip_onet:
         n = fetch_onet_tech_skills()

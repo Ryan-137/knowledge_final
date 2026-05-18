@@ -152,18 +152,6 @@
       ],
       "description": "Scala 语言技能。",
       "origin": "canonical"
-    },
-    {
-      "id": "skill_anglejs",
-      "name": "Anglejs",
-      "aliases": [
-        "语言表达能力",
-        "go语言",
-        "短信"
-      ],
-      "description": "Anglejs — 由语料挖掘新增（原始词面：go语言, 短信, 语言表达能力）",
-      "origin": "extracted",
-      "source_note": "cluster_id=20 size=4"
     }
   ],
   "tool": [
@@ -768,131 +756,149 @@
       "origin": "canonical"
     },
     {
+      "id": "tool_n2",
+      "name": "日语n2",
+      "aliases": [
+        "普通话",
+        "深圳证券市场",
+        "中国证券期货业南方信息技术中心",
+        "深圳证券通信网",
+        "深圳证券交易所",
+        "日语"
+      ],
+      "description": "日语n2 — 由语料挖掘新增（原始词面：日语n2, 可以看懂日语文档, 日语）",
+      "origin": "extracted",
+      "source_note": "cluster_id=38 size=10"
+    },
+    {
       "id": "tool_html",
       "name": "Html",
       "aliases": [
-        "html/css/javascript",
-        "html5",
         "css3",
         "html5+css",
+        "html/css/javascript",
+        "css",
         "xhtml",
-        "css"
+        "html5"
       ],
       "description": "Html — 由语料挖掘新增（原始词面：html, css, html5）",
       "origin": "extracted",
-      "source_note": "cluster_id=0 size=7"
-    },
-    {
-      "id": "tool_github",
-      "name": "Github",
-      "aliases": [
-        "gis开发",
-        "gitflow"
-      ],
-      "description": "Github — 由语料挖掘新增（原始词面：github, gis开发, gui程序开发）",
-      "origin": "extracted",
-      "source_note": "cluster_id=7 size=5"
+      "source_note": "cluster_id=1 size=7"
     },
     {
       "id": "tool_openshift",
       "name": "Openshift",
       "aliases": [
-        "openflow",
         "openvswitch",
+        "openflow",
+        "openstack",
         "opengl"
       ],
       "description": "Openshift — 由语料挖掘新增（原始词面：openshift, openflow, openvswitch）",
       "origin": "extracted",
-      "source_note": "cluster_id=3 size=4"
+      "source_note": "cluster_id=3 size=6"
     },
     {
-      "id": "tool_jquery",
-      "name": "Jquery",
+      "id": "tool_j2ee",
+      "name": "j2ee",
       "aliases": [
-        "jquery easy ui",
-        "jquery ui",
-        "jquery-ui"
+        "java/j2ee",
+        "j2ee规范"
       ],
-      "description": "Jquery — 由语料挖掘新增（原始词面：jquery, jquery ui, jquery-ui）",
+      "description": "j2ee — 由语料挖掘新增（原始词面：j2ee, j2ee开发模式, 基于j2ee的b/s结构的系统开发）",
       "origin": "extracted",
-      "source_note": "cluster_id=12 size=4"
-    },
-    {
-      "id": "tool_oracle",
-      "name": "Oracle",
-      "aliases": [
-        "oracle数据库",
-        "oracle数据库体系结构",
-        "oracle金银牌"
-      ],
-      "description": "Oracle — 由语料挖掘新增（原始词面：oracle, oracle金银牌, oracle数据库）",
-      "origin": "extracted",
-      "source_note": "cluster_id=13 size=4"
+      "source_note": "cluster_id=8 size=6"
     },
     {
       "id": "tool_lnmp",
       "name": "Lnmp",
       "aliases": [
-        "lnmp开发"
+        "lnmp开发",
+        "lstm"
       ],
       "description": "Lnmp — 由语料挖掘新增（原始词面：lnmp开发, lnmp开发环境, lnmp）",
       "origin": "extracted",
-      "source_note": "cluster_id=5 size=3"
+      "source_note": "cluster_id=4 size=4"
+    },
+    {
+      "id": "tool_jquery",
+      "name": "Jquery",
+      "aliases": [
+        "jquery ui",
+        "jquery-ui",
+        "jquery easy ui"
+      ],
+      "description": "Jquery — 由语料挖掘新增（原始词面：jquery, jquery ui, jquery-ui）",
+      "origin": "extracted",
+      "source_note": "cluster_id=10 size=4"
+    },
+    {
+      "id": "tool_oracle",
+      "name": "Oracle",
+      "aliases": [
+        "oracle金银牌",
+        "oracle数据库",
+        "oracle数据库体系结构"
+      ],
+      "description": "Oracle — 由语料挖掘新增（原始词面：oracle, oracle金银牌, oracle数据库）",
+      "origin": "extracted",
+      "source_note": "cluster_id=11 size=4"
+    },
+    {
+      "id": "tool_3d",
+      "name": "3d图形学原理",
+      "aliases": [
+        "3d打印数据处理软件",
+        "3d几何学",
+        "3d打印"
+      ],
+      "description": "3d图形学原理 — 由语料挖掘新增（原始词面：3d图形学原理, 3d几何学, 3d打印）",
+      "origin": "extracted",
+      "source_note": "cluster_id=31 size=4"
     },
     {
       "id": "tool_yii",
       "name": "yii框架",
       "aliases": [
-        "系统框架",
-        "ci框架"
+        "ci框架",
+        "系统框架"
       ],
       "description": "yii框架 — 由语料挖掘新增（原始词面：yii框架, 系统框架, ci框架）",
       "origin": "extracted",
-      "source_note": "cluster_id=26 size=3"
+      "source_note": "cluster_id=22 size=3"
     },
     {
       "id": "tool_springmvc",
       "name": "Springmvc",
       "aliases": [
-        "spring mvc",
-        "spring core"
+        "spring core",
+        "spring mvc"
       ],
       "description": "Springmvc — 由语料挖掘新增（原始词面：springmvc, spring mvc, spring core）",
       "origin": "extracted",
-      "source_note": "cluster_id=14 size=3"
+      "source_note": "cluster_id=12 size=3"
     },
     {
       "id": "tool_ps",
       "name": "Ps",
       "aliases": [
-        "ssh",
-        "ssh框架"
+        "ssh框架",
+        "ssh"
       ],
       "description": "Ps — 由语料挖掘新增（原始词面：ssh框架, ps, ssh）",
       "origin": "extracted",
-      "source_note": "cluster_id=33 size=3"
+      "source_note": "cluster_id=28 size=3"
     },
     {
       "id": "tool_hibernate",
       "name": "Hibernate",
       "aliases": [
-        "hibernate框架",
-        "hibernate/ibatis"
+        "hibernate/ibatis",
+        "hibernate框架"
       ],
       "description": "Hibernate — 由语料挖掘新增（原始词面：hibernate, hibernate框架, hibernate/ibatis）",
       "origin": "extracted",
-      "source_note": "cluster_id=19 size=3"
-    },
-    {
-      "id": "tool_easyui",
-      "name": "Easyui",
-      "aliases": [
-        "小程序",
-        "易用性"
-      ],
-      "description": "Easyui — 由语料挖掘新增（原始词面：易用性, 小程序, easyui）",
-      "origin": "extracted",
-      "source_note": "cluster_id=22 size=3"
+      "source_note": "cluster_id=18 size=3"
     },
     {
       "id": "tool_hybrid_app",
@@ -902,7 +908,7 @@
       ],
       "description": "hybrid app — 由语料挖掘新增（原始词面：hybrid app, hybridstart, hybrid混合模式开发）",
       "origin": "extracted",
-      "source_note": "cluster_id=31 size=3"
+      "source_note": "cluster_id=26 size=3"
     },
     {
       "id": "tool_springcloud",
@@ -912,7 +918,7 @@
       ],
       "description": "Springcloud — 由语料挖掘新增（原始词面：springcloud, spring-cloud, spring cloud微服务）",
       "origin": "extracted",
-      "source_note": "cluster_id=32 size=3"
+      "source_note": "cluster_id=27 size=3"
     },
     {
       "id": "tool_qt4_6",
@@ -923,7 +929,18 @@
       ],
       "description": "qt4.6 — 由语料挖掘新增（原始词面：qt4.6, qt图形库, qtcreators）",
       "origin": "extracted",
-      "source_note": "cluster_id=36 size=3"
+      "source_note": "cluster_id=33 size=3"
+    },
+    {
+      "id": "tool_asp_net_core",
+      "name": "asp.net core",
+      "aliases": [
+        "asp.net webapi",
+        "asp.net"
+      ],
+      "description": "asp.net core — 由语料挖掘新增（原始词面：asp.net core, asp.net webapi, asp.net）",
+      "origin": "extracted",
+      "source_note": "cluster_id=34 size=3"
     }
   ],
   "language": [

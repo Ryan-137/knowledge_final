@@ -131,7 +131,9 @@ def run(top_n: int = 500) -> dict[str, Any]:
     # L1 mentions 中文档已识别的实体
     l1_mentions  = read_jsonl(cfg.paths.staging_mentions)
     for m in l1_mentions:
-        doc_entity_map[m["doc_id"]].add(m["linked_entity_id"])
+        entity_id = m.get("linked_entity_id")
+        if entity_id:
+            doc_entity_map[m["doc_id"]].add(entity_id)
 
     # 只处理 NER 价值高的章节类型
     target_sections = {"tech_skills", "requirements", "full_text", "projects"}

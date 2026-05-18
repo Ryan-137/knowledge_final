@@ -2,7 +2,7 @@
 
 主要流程
 --------
-1. 扫描 data/raw/fairCV/ 和 data/raw/jd/csv_import/ 下的所有 JSON 文件。
+1. 扫描 data/raw/fairCV/ 和 data/raw/jd/*/ 下的所有 JSON 文件。
 2. 对每份文档：
    - FairCV 简历：解析 Markdown，按 ### 标题拆分章节，清洗格式字符。
    - JD 招聘文档：按字段（job_title / requirements / preferred 等）拆分章节。
@@ -300,10 +300,10 @@ def process(
     # 加载已处理缓存（幂等支持）
     processed_cache = _load_cache()
 
-    # 收集待处理的 raw 文件路径
+    # 收集待处理的 raw 文件路径；JD 支持多个来源子目录，如 csv_import / cn_skillspan_lkst
     source_dirs: dict[str, Path] = {
         "fairCV": cfg.paths.raw_fairCV,
-        "jd":     cfg.paths.raw_jd / "csv_import",
+        "jd":     cfg.paths.raw_jd,
     }
     active_sources = sources or list(source_dirs.keys())
 
@@ -316,7 +316,10 @@ def process(
             logger.warning("数据源目录不存在，跳过：%s", source_name)
             continue
 
-        raw_files = sorted(src_dir.glob("*.json"))
+        if source_name == "jd":
+            raw_files = sorted(src_dir.glob("*/*.json"))
+        else:
+            raw_files = sorted(src_dir.glob("*.json"))
         if limit:
             raw_files = raw_files[:limit]
 

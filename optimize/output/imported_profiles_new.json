@@ -5,7 +5,7 @@
     "source_id": "OhMyKing/FairCV",
     "source_url": "https://huggingface.co/datasets/OhMyKing/FairCV",
     "source_title": "OhMyKing/FairCV: Chinese Simulated Resume Dataset",
-    "snapshot_date": "2026-05-17",
+    "snapshot_date": "2026-05-18",
     "evidence_snippet": "Simulated Chinese resumes covering backend, frontend, ML, NLP, CV, security, DevOps, Android, iOS and other CS roles. Contains skills, education, project experience and self-evaluation sections.",
     "sample_job_titles": [
       "后端开发工程师",
@@ -80,7 +80,7 @@
     "source_id": "51job+zhilian_2018",
     "source_url": "https://www.kaggle.com (Job Information for IT)",
     "source_title": "51job & 智联招聘 CS Job Descriptions (2018)",
-    "snapshot_date": "2026-05-17",
+    "snapshot_date": "2026-05-18",
     "evidence_snippet": "Computer science job postings from 51job and Zhaopin covering backend, frontend, data, AI/ML, DevOps, security, QA and embedded roles. Contains requirements, responsibilities and preferred qualifications.",
     "sample_job_titles": [
       "Python后端工程师",
@@ -113,6 +113,7 @@
       "knowledge_embedded_protocols",
       "knowledge_etl_modeling",
       "knowledge_experimentation",
+      "knowledge_hardware_debugging",
       "knowledge_linear_algebra",
       "knowledge_math_foundation",
       "knowledge_microservice_architecture",
@@ -136,11 +137,10 @@
       "project_microservice",
       "project_ml_deployment",
       "project_mobile_app",
+      "project_model_training",
       "project_performance_testing",
       "project_recommendation_system",
-      "project_security_ctf",
-      "project_test_automation",
-      "project_web_ui"
+      "project_security_ctf"
     ],
     "profile_tags": [
       "jd",

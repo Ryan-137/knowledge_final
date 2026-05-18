@@ -398,7 +398,7 @@ def _parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--max-docs", type=int, default=200,
                    help="每个来源最多处理的文档数（默认 200，控制 API 成本）")
-    p.add_argument("--sources", nargs="*", choices=["fairCV", "csv_import"],
+    p.add_argument("--sources", nargs="*", choices=["fairCV", "csv_import", "cn_skillspan_lkst"],
                    default=None, help="指定数据来源")
     p.add_argument("--dry-run", action="store_true",
                    help="仅打印 prompt 样例，不调用 API")
