@@ -1,150 +1,229 @@
-# optimize — Entity Extraction & Disambiguation Pipeline
+# optimize 实体抽取与消歧流程
 
-Owner: ztt (data collection / rule NER / external alignment) &
-       qyw (LLM NER / embedding disambiguation / evaluation)
+`optimize/` 是课程项目中用于扩展职业知识图谱实体、别名和外部标准引用的离线管道。它读取原项目 `data/` 中的 source、dictionary、seed 数据，所有中间产物写入 `optimize/pipeline_data/`，最终审阅产物写入 `optimize/output/`。
 
-The pipeline enriches `data/sources/skills.json`, `data/sources/aliases.json`,
-and `data/sources/imported_profiles.json`.  These files are then compiled into
-the runtime graph by `scripts/build_graph.py`.
+## 边界原则
 
-## Isolation principle
+- 原项目 `data/` 只读，不在管道中直接覆盖。
+- 管道中间数据统一写入 `optimize/pipeline_data/`。
+- 最终输出统一写入 `optimize/output/`，人工审阅后再合并到 `data/sources/`。
+- `optimize/output/` 中已有的三份 enriched 文件是合并候选，不等于线上图谱已生效。
 
-All pipeline-generated data is written to **`optimize/pipeline_data/`** and
-**`optimize/output/`**.  The original project files under `data/` are
-**never modified**.  When ready to apply the enriched entities to the project,
-manually review `optimize/output/` and merge into `data/sources/` by hand.
+## 目录结构
 
-```
+```text
 optimize/
-  pipeline_data/           All pipeline-generated data (WRITE zone)
-    raw/                   Downloaded raw documents
-      fairCV/              FairCV resumes (700 records)
-      jd/                  JD records (4421 records)
-      external/esco/       ESCO skill index
-      external/onet/       O*NET technology tools index
-    staging/               Cleaned and segmented documents
-      staged_documents.jsonl
-      mentions.jsonl       All NER mentions (L1 + L2b, merged & deduplicated)
-    canonical/             Pipeline-generated entity candidates
-      candidate_surfaces.json
-      disambiguation_log.jsonl
-      new_entity_clusters.json
-      entity_cooccurrence_candidates.jsonl
-    data_catalog.md
-  output/                  Final enriched files for manual review & merge
-    skills_enriched.json   → merge into data/sources/skills.json
-    aliases_enriched.json  → merge into data/sources/aliases.json
-    imported_profiles_new.json → append to data/sources/imported_profiles.json
-  config.py              Central configuration (all paths and thresholds)
-  utils/
-    logging_utils.py     Logger factory
-    file_utils.py        JSON / JSONL I/O, atomic writes
-    hash_utils.py        SHA-256 fingerprinting
-  data_collection/       Step 1 — raw data acquisition
-    catalog.py           Maintains docs/data_catalog.md
-    fetch_fairCV.py      FairCV dataset (HuggingFace or local CSV)
-    crawl_jd.py          JD crawler (Selenium-based) + CSV import fallback
-    fetch_external_standards.py  ESCO skills + O*NET technology tools
-  staging/               Step 2 — text cleaning and segmentation
-    clean_documents.py
-    segment_sentences.py
-  ner/                   Step 3 — three-layer NER pipeline
-    abbr_expansion.json  Abbreviation expansion table
-    rule_ner.py          L1: spaCy EntityRuler + regex rules   (ztt)
-    distant_supervision.py  L2a: auto-labelling from existing aliases  (qyw)
-    llm_ner.py           L2b: LLM structured extraction   (qyw)
-    merge_mentions.py    L3: cross-layer merge and confidence fusion
-  disambiguation/        Step 4 — entity disambiguation
-    string_normalize.py  Tier 1: normalisation + exact match
-    embedding_disambiguate.py  Tier 2: multilingual embeddings + DBSCAN
-    llm_disambiguate.py  Tier 3: LLM binary-classification fallback
-  external_align/        Step 5 — ESCO / O*NET alignment
-    align_esco_onet.py
-  output/                Step 6 — write back to data/sources/
-    generate_skills.py
-    generate_aliases.py
-    generate_profiles.py
-    validate_output.py
-  evaluation/            Step 7 — P/R/F1, ablation, coverage report
-    golden_set_eval.py
-    ablation_study.py
-    coverage_report.py
-  notebooks/
-    review_tool.ipynb    Interactive human review for needs_review queue
+  config.py                         路径、阈值、模型和数据采集配置
+  requirements.txt                  optimize 管道依赖
+  preview_output.py                 输出前的候选实体与外部对齐预览
+
+  pipeline_data/                    管道生成数据，已被 .gitignore 忽略
+    raw/                            原始语料
+      fairCV/                       FairCV 简历数据
+      jd/                           JD 招聘文本
+      external/esco/                ESCO 技能索引
+      external/onet/                O*NET 技术工具索引
+    staging/
+      staged_documents.jsonl        清洗、分章节、分句后的文档
+      mentions.jsonl                L1/L2 mention 识别与消歧结果
+    canonical/
+      candidate_surfaces.json       候选新词面
+      entity_cooccurrence_candidates.jsonl  文档级实体共现候选
+      disambiguation_log.jsonl      消歧审计日志
+      new_entity_clusters.json      嵌入聚类得到的新实体簇
+      external_alignment.json       ESCO / O*NET 外部标准对齐结果
+      entity_quality_report.json    输出质量校验报告
+      entity_case_report.json       案例报告
+    data_catalog.md                 数据源目录，由采集脚本维护
+
+  output/
+    skills_enriched.json            待审阅的 skills.json 替换候选
+    aliases_enriched.json           待审阅的 aliases.json 替换候选
+    imported_profiles_new.json      待追加到 imported_profiles.json 的 profile
+
+  data_collection/                  数据采集
+    fetch_fairCV.py                 获取/导入 FairCV 简历数据
+    crawl_jd.py                     Selenium JD 爬虫与 CSV 导入
+    import_skillspan_jd.py          将 CN_skillspan train 聚合为 JD raw 文档
+    fetch_external_standards.py     获取 ESCO / O*NET 外部标准
+    login_helper.py                 招聘站点登录态辅助
+    catalog.py                      维护 pipeline_data/data_catalog.md
+
+  staging/
+    clean_documents.py              raw 文档清洗、章节切分、句子偏移生成
+    segment_sentences.py            分句工具
+
+  ner/
+    rule_ner.py                     L1 规则 NER，基于现有 aliases 和正则
+    distant_supervision.py          L2a 候选词面挖掘与实体共现候选
+    llm_ner.py                      L2b LLM 结构化抽取
+    merge_mentions.py               L3 mention 去重与置信度融合
+    abbr_expansion.json             缩写扩展表
+
+  disambiguation/
+    string_normalize.py             第一级精确匹配消歧
+    embedding_disambiguate.py       第二级 embedding 相似度与 DBSCAN 聚类
+
+  external_align/
+    align_esco_onet.py              与 ESCO / O*NET 做 embedding 对齐
+
+  output/
+    generate_output.py              生成三份 enriched 输出文件
+
+  evaluation/
+    validate_entity_quality.py      质量门禁，校验输出实体、别名和 profile
+    coverage_report.py              覆盖率、消融和召回估算报告
+    case_report.py                  典型案例报告
+    evaluate_skillspan_ner.py       CN_skillspan 测试集上的规则 NER 评测
+    review_queue.py                 人工审阅 embedding 待确认项并回写 aliases 输出
 ```
 
-## Quick start
+## 环境准备
 
-```bash
+本项目约定在 conda 环境 `xxx` 中执行 Python 命令。执行前先确认解释器路径，避免把依赖装到系统 Python。
+
+```powershell
+conda activate xxx
+python -c "import sys; print(sys.executable)"
 pip install -r optimize/requirements.txt
-python -m spacy download zh_core_web_sm en_core_web_sm
+python -m spacy download zh_core_web_sm
+python -m spacy download en_core_web_sm
+```
 
-# Run each step in order
-python -m optimize.data_collection.fetch_fairCV
-python -m optimize.data_collection.crawl_jd
+LLM 抽取默认使用 DeepSeek 兼容 OpenAI SDK 接口，环境变量名由 `optimize/config.py` 中的 `cfg.llm.api_key_env` 决定，当前为 `DEEPSEEK_API_KEY`。
+
+```powershell
+$env:DEEPSEEK_API_KEY="你的 key"
+```
+
+## 标准执行顺序
+
+按下面顺序执行可以得到完整的 enriched 输出。调试时优先给采集、清洗和 NER 步骤加 `--limit`、`--max-docs` 或 `--max-samples`。
+
+```powershell
+conda activate xxx
+python -c "import sys; print(sys.executable)"
+
+# 1. 数据采集
+python -m optimize.data_collection.fetch_fairCV --max-samples 500
+python -m optimize.data_collection.crawl_jd --source csv_import --csv-path path\to\jobs.csv
+python -m optimize.data_collection.import_skillspan_jd
 python -m optimize.data_collection.fetch_external_standards
+
+# 2. 清洗与分句
 python -m optimize.staging.clean_documents
+
+# 3. 实体识别与候选挖掘
 python -m optimize.ner.rule_ner
 python -m optimize.ner.distant_supervision
-python -m optimize.ner.llm_ner
+python -m optimize.ner.llm_ner --max-docs 200
 python -m optimize.ner.merge_mentions
+
+# 4. 消歧与外部标准对齐
 python -m optimize.disambiguation.string_normalize
 python -m optimize.disambiguation.embedding_disambiguate
 python -m optimize.external_align.align_esco_onet
-python -m optimize.output.generate_skills
-python -m optimize.output.generate_aliases
-python -m optimize.output.generate_profiles
-python -m optimize.output.validate_output
+
+# 5. 输出前预览、生成和校验
+python -m optimize.preview_output
+python -m optimize.output.generate_output
+python -m optimize.evaluation.validate_entity_quality
 python -m optimize.evaluation.coverage_report
+python -m optimize.evaluation.case_report
 ```
 
-## Data source acquisition notes
+## 常用调试命令
+
+```powershell
+# 只清洗部分来源
+python -m optimize.staging.clean_documents --sources fairCV --limit 50
+
+# 只跑规则 NER 的小样本
+python -m optimize.ner.rule_ner --sources fairCV --limit 50
+
+# LLM NER 先 dry-run，不写入 mentions.jsonl
+python -m optimize.ner.llm_ner --max-docs 5 --dry-run
+
+# 嵌入消歧调小 batch
+python -m optimize.disambiguation.embedding_disambiguate --batch-size 32
+
+# 输出时只接受更大的新实体簇
+python -m optimize.output.generate_output --min-cluster-size 4
+
+# warning 也阻断合并
+python -m optimize.evaluation.validate_entity_quality --fail-on-warning
+
+# 查看质量报告中的典型案例
+python -m optimize.evaluation.case_report --limit-per-section 10
+```
+
+## 数据采集说明
 
 ### FairCV
 
-FairCV is a semi-structured resume dataset for fairness research.
+优先使用本地 Parquet 或 HuggingFace mirror，避免网络不稳定影响流程。
 
-- **HuggingFace route (preferred):** configure `cfg.collection.fairCV_dataset_name`
-  and run `fetch_fairCV.py`.  If the dataset is gated, run
-  `huggingface-cli login` first.
-- **Local CSV fallback:** if the dataset is unavailable, download a compatible
-  CSV (e.g. from Kaggle) and supply `--csv-path /path/to/file.csv`.
+```powershell
+python -m optimize.data_collection.fetch_fairCV --parquet-path path\to\train-00000.parquet
+python -m optimize.data_collection.fetch_fairCV --local-dir path\to\fairCV_hf_cache
+python -m optimize.data_collection.fetch_fairCV --max-samples 500 --positions "后端开发工程师,数据工程师"
+```
 
-### JD crawler (拉勾 / other platforms)
+### JD 招聘文本
 
-Modern recruitment platforms use heavy client-side rendering and session
-validation.  The recommended approach:
+线上招聘站点通常有登录态和反爬限制。能拿到 CSV 时优先使用 CSV 导入；必须爬取时先用 `login_helper.py` 准备 Chrome profile。
 
-1. Install Chrome and run `pip install selenium webdriver-manager`.
-2. Log in to the target site once in a Chrome window.  Supply the profile
-   directory with `--chrome-profile`.
-3. Run `crawl_jd.py --source lagou`.
-4. If live scraping fails, download a CSV dataset (e.g. from Kaggle:
-   "Chinese Job Postings") and use `--source csv_import --csv-path ...`.
+```powershell
+python -m optimize.data_collection.login_helper --site lagou --profile optimize/.chrome_profile
+python -m optimize.data_collection.crawl_jd --source lagou --chrome-profile optimize/.chrome_profile --max 30 --no-headless
+python -m optimize.data_collection.crawl_jd --source csv_import --csv-path path\to\jobs.csv
+```
 
-### ESCO
+### CN_skillspan
 
-The download URL may change between releases.  If the default URL fails:
-1. Visit https://esco.ec.europa.eu/en/use-esco/download
-2. Download the skills CSV ZIP manually.
-3. Run: `python -m optimize.data_collection.fetch_external_standards --esco-zip /path/to/file.zip`
+`import_skillspan_jd.py` 默认读取 `optimize/CN_skillspan_lkst_train.json`，该文件在 `.gitignore` 中忽略，需要本地自行准备。
 
-### O*NET Technology Skills
+```powershell
+python -m optimize.data_collection.import_skillspan_jd --input optimize/CN_skillspan_lkst_train.json
+```
 
-Direct download usually works without authentication.  If the URL is outdated,
-visit https://www.onetcenter.org/database.html, download
-"Technology Skills.txt", and place it at `data/raw/external/onet/technology_skills.txt`.
+### ESCO / O*NET
 
-## Deliverables and downstream interface
+默认脚本会尝试下载外部标准。若 ESCO 地址变更或网络失败，先手动下载 ZIP，再传入本地路径。
 
-| File | Consumer |
-| ---- | -------- |
-| `data/sources/skills.json` (enriched) | `scripts/build_graph.py` |
-| `data/sources/aliases.json` (enriched) | `scripts/build_graph.py` |
-| `data/sources/imported_profiles.json` (new entries) | `scripts/build_graph.py` |
-| `data/staging/mentions.jsonl` | wxs & sx (relation extraction) |
-| `data/canonical/disambiguation_log.jsonl` | audit / defence |
-| `reports/entity_coverage_report.md` | defence materials |
+```powershell
+python -m optimize.data_collection.fetch_external_standards
+python -m optimize.data_collection.fetch_external_standards --esco-zip path\to\esco.zip
+python -m optimize.data_collection.fetch_external_standards --skip-esco
+python -m optimize.data_collection.fetch_external_standards --skip-onet
+```
 
-This pipeline does **not** produce relation types, edge weights, or any
-`supports` / `requires` definitions.  Those are the responsibility of wxs & sx.
+## 输出合并方式
+
+`optimize.output.generate_output` 只生成候选文件，不直接修改 `data/sources/`。确认 `validate_entity_quality.py` 没有硬错误后，再手动合并。
+
+```powershell
+Copy-Item optimize\output\skills_enriched.json data\sources\skills.json
+Copy-Item optimize\output\aliases_enriched.json data\sources\aliases.json
+```
+
+`imported_profiles_new.json` 不应直接覆盖 `data/sources/imported_profiles.json`，需要把其中新增 profile 追加进原文件。合并后重新编译和校验图谱。
+
+```powershell
+python scripts/build_graph.py
+python scripts/validate_graph.py
+```
+
+## 下游接口
+
+| 文件 | 用途 |
+| --- | --- |
+| `optimize/output/skills_enriched.json` | 审阅后替换 `data/sources/skills.json` |
+| `optimize/output/aliases_enriched.json` | 审阅后替换 `data/sources/aliases.json` |
+| `optimize/output/imported_profiles_new.json` | 审阅后追加到 `data/sources/imported_profiles.json` |
+| `optimize/pipeline_data/staging/mentions.jsonl` | 关系抽取、覆盖率统计和案例分析输入 |
+| `optimize/pipeline_data/canonical/entity_cooccurrence_candidates.jsonl` | 文档级实体共现候选，供关系抽取参考 |
+| `optimize/pipeline_data/canonical/disambiguation_log.jsonl` | 消歧审计与人工复核 |
+| `optimize/pipeline_data/canonical/entity_quality_report.json` | 合并前质量门禁报告 |
+
+该管道只负责实体、别名、profile 和外部标准引用的增量生成，不负责生成 `supports`、`requires` 等关系边，也不负责设置边权重。
