@@ -57,7 +57,6 @@ from optimize.utils.file_utils import (
     ensure_dir,
     read_json,
     read_jsonl,
-    write_json,
 )
 from optimize.utils.hash_utils import text_sha256
 from optimize.utils.logging_utils import get_pipeline_logger
@@ -66,13 +65,14 @@ logger = get_pipeline_logger("ner.rule_ner")
 
 # 输出路径
 _MENTIONS_PATH = cfg.paths.staging_mentions
-_CACHE_PATH    = cfg.paths.staging_root / ".ner_rule_cache.json"
 
 # 上下文窗口（字符数），用于判断强度/否定
 _CONTEXT_WINDOW = 15
 
 # 规则层 mention 的基础置信度
 _BASE_CONFIDENCE = 0.93
+
+_OffsetSpan = tuple[int, int]
 
 
 @dataclass(frozen=True)
@@ -192,14 +192,55 @@ class RuleNER:
         # 含中文或混合内容：直接匹配，不加词边界
         return re.compile(escaped, flags=re.IGNORECASE)
 
-    def _expand_abbr(self, text: str) -> str:
-        """将文本中出现的缩写替换为展开形式（大小写不敏感）。"""
-        result = text
-        for abbr, expansion in self._abbr.items():
-            # 缩写替换仍使用词边界规则（避免把"ml"替换进"html"）
-            pat = rf"(?<![a-z]){re.escape(abbr)}(?![a-z])"
-            result = re.sub(pat, expansion, result, flags=re.IGNORECASE)
-        return result
+    def _expand_abbr_with_offsets(self, text: str) -> tuple[str, list[_OffsetSpan]]:
+        """展开缩写，并记录展开后每个字符对应的原文字符区间。"""
+        if not self._abbr:
+            return text, [(i, i + 1) for i in range(len(text))]
+
+        abbr_items = sorted(self._abbr.items(), key=lambda item: len(item[0]), reverse=True)
+        pattern = re.compile(
+            "|".join(rf"(?<![a-z]){re.escape(abbr)}(?![a-z])" for abbr, _ in abbr_items),
+            flags=re.IGNORECASE,
+        )
+        expansion_by_key = {abbr.lower(): expansion for abbr, expansion in abbr_items}
+
+        expanded_parts: list[str] = []
+        offset_map: list[_OffsetSpan] = []
+        cursor = 0
+        for match in pattern.finditer(text):
+            if match.start() > cursor:
+                raw_part = text[cursor:match.start()]
+                expanded_parts.append(raw_part)
+                offset_map.extend((i, i + 1) for i in range(cursor, match.start()))
+
+            raw_abbr = match.group(0)
+            expansion = expansion_by_key.get(raw_abbr.lower(), raw_abbr)
+            expanded_parts.append(expansion)
+            offset_map.extend((match.start(), match.end()) for _ in expansion)
+            cursor = match.end()
+
+        if cursor < len(text):
+            raw_part = text[cursor:]
+            expanded_parts.append(raw_part)
+            offset_map.extend((i, i + 1) for i in range(cursor, len(text)))
+
+        return "".join(expanded_parts), offset_map
+
+    @staticmethod
+    def _map_expanded_span(
+        offset_map: list[_OffsetSpan],
+        start: int,
+        end: int,
+    ) -> tuple[int, int] | None:
+        """将展开文本中的 span 映射回原文 span，无法映射时返回 None。"""
+        if start < 0 or end <= start or end > len(offset_map):
+            return None
+        spans = offset_map[start:end]
+        orig_start = min(span[0] for span in spans)
+        orig_end = max(span[1] for span in spans)
+        if orig_end <= orig_start:
+            return None
+        return orig_start, orig_end
 
     def _detect_intensity(self, context: str) -> tuple[bool, str]:
         """根据上下文判断否定标记和强度标签。
@@ -248,8 +289,8 @@ class RuleNER:
         Returns:
             该句子中发现的 mention 列表。
         """
-        # 先展开缩写（在句子粒度上展开，保留原文备用）
-        expanded = self._expand_abbr(sentence_text)
+        # 先展开缩写，并保留展开文本到原文的偏移映射。
+        expanded, offset_map = self._expand_abbr_with_offsets(sentence_text)
 
         mentions: list[Mention] = []
         # 已被更长 mention 覆盖的字符位置（防止双重计数）
@@ -264,7 +305,12 @@ class RuleNER:
                 if any(pos in covered for pos in range(span_start, span_end)):
                     continue
 
-                surface    = sentence_text[span_start:span_end]
+                original_span = self._map_expanded_span(offset_map, span_start, span_end)
+                if original_span is None:
+                    continue
+                original_start, original_end = original_span
+
+                surface    = sentence_text[original_start:original_end]
                 normalized = ap.alias.lower()
                 context    = self._build_context(expanded, span_start, span_end)
                 is_neg, intensity = self._detect_intensity(context)
@@ -276,8 +322,8 @@ class RuleNER:
                 elif intensity in ("weak_positive", "neutral"):
                     confidence = max(0.5, confidence - 0.08)
 
-                abs_start = sentence_abs_start + span_start
-                abs_end   = sentence_abs_start + span_end
+                abs_start = sentence_abs_start + original_start
+                abs_end   = sentence_abs_start + original_end
                 mid = f"m_{doc_id}_{section_id}_{abs_start}_{abs_end}"
 
                 mentions.append(Mention(
@@ -361,23 +407,19 @@ class RuleNER:
         return all_mentions
 
 
-def _load_cache() -> set[str]:
-    """加载已处理文档的 sha256 缓存。"""
-    if _CACHE_PATH.exists():
-        try:
-            return set(read_json(_CACHE_PATH).get("processed", []))
-        except Exception:
-            pass
-    return set()
-
-
-def _save_cache(cache: set[str]) -> None:
-    write_json(_CACHE_PATH, {"processed": sorted(cache)})
+def _matches_sources(doc: dict[str, Any], sources: list[str] | None) -> bool:
+    """按 source_group 或 source_name 过滤 staged 文档。"""
+    if not sources:
+        return True
+    source_group = doc.get("source_group", "")
+    source_name = doc.get("source_name", "")
+    return source_group in sources or source_name in sources
 
 
 def run(
     sources: list[str] | None = None,
     limit: int | None = None,
+    append: bool = False,
 ) -> dict[str, int]:
     """执行 L1 规则 NER 全量流程。
 
@@ -389,9 +431,11 @@ def run(
         统计字典：docs_processed / mentions_total / docs_skipped
     """
     ensure_dir(cfg.paths.staging_root)
+    if not append and _MENTIONS_PATH.exists():
+        _MENTIONS_PATH.unlink()
 
     ner     = RuleNER()
-    cache   = _load_cache()
+    cache: set[str] = set()
     docs    = read_jsonl(_MENTIONS_PATH.parent / "staged_documents.jsonl")
 
     stats   = {"docs_processed": 0, "docs_skipped": 0, "mentions_total": 0}
@@ -403,7 +447,7 @@ def run(
         src = doc.get("source_name", "unknown")
 
         # 来源过滤
-        if sources and src not in sources:
+        if not _matches_sources(doc, sources):
             continue
 
         # limit 控制
@@ -434,7 +478,6 @@ def run(
                 stats["docs_processed"], stats["mentions_total"],
             )
 
-    _save_cache(cache)
     logger.info(
         "L1 NER 完成：processed=%d  mentions=%d  skipped=%d",
         stats["docs_processed"], stats["mentions_total"], stats["docs_skipped"],
@@ -445,14 +488,16 @@ def run(
 
 def _parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--sources", nargs="*", choices=["fairCV", "jd"],
-                   default=None, help="指定数据来源，默认处理全部")
+    p.add_argument("--sources", nargs="*", default=None,
+                   help="指定数据来源，可用 source_group（fairCV/jd）或具体 source_name（如 csv_import）")
     p.add_argument("--limit", type=int, default=None,
                    help="每个来源最多处理的文档数（调试用）")
+    p.add_argument("--append", action="store_true",
+                   help="保留已有 mentions.jsonl 并追加新结果（默认覆盖当前步骤输出）")
     return p.parse_args()
 
 
 if __name__ == "__main__":
     args = _parse_args()
-    result = run(sources=args.sources, limit=args.limit)
+    result = run(sources=args.sources, limit=args.limit, append=args.append)
     print(f"完成：docs={result['docs_processed']}  mentions={result['mentions_total']}")

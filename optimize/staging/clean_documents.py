@@ -57,8 +57,6 @@ from optimize.utils.file_utils import (
     append_jsonl,
     ensure_dir,
     read_json,
-    read_jsonl,
-    write_json,
 )
 from optimize.utils.hash_utils import text_sha256
 from optimize.utils.logging_utils import get_pipeline_logger
@@ -67,8 +65,6 @@ logger = get_pipeline_logger("staging.clean_documents")
 
 # 输出文件路径
 _OUTPUT_PATH = cfg.paths.staging_root / "staged_documents.jsonl"
-# 已处理文档的 sha256 缓存，避免重复处理
-_CACHE_PATH = cfg.paths.staging_root / ".staged_cache.json"
 
 # FairCV Markdown 章节标题 → section_type 映射
 _FAIRCV_SECTION_MAP: dict[str, str] = {
@@ -257,6 +253,7 @@ def _build_staged_doc(raw_doc: dict[str, Any]) -> dict[str, Any] | None:
     return {
         "doc_id":      doc_id,
         "source_name": source_name,
+        "source_group": "fairCV" if doc_type == "resume" else "jd",
         "doc_type":    doc_type,
         "language":    language,
         "sections":    sections,
@@ -266,25 +263,10 @@ def _build_staged_doc(raw_doc: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
-def _load_cache() -> set[str]:
-    """加载已处理文档的 sha256 集合，用于幂等跳过。"""
-    if _CACHE_PATH.exists():
-        try:
-            data = read_json(_CACHE_PATH)
-            return set(data.get("processed_sha256", []))
-        except Exception:
-            pass
-    return set()
-
-
-def _save_cache(processed: set[str]) -> None:
-    """将已处理的 sha256 集合写入缓存文件。"""
-    write_json(_CACHE_PATH, {"processed_sha256": sorted(processed)})
-
-
 def process(
     sources: list[str] | None = None,
     limit: int | None = None,
+    append: bool = False,
 ) -> dict[str, int]:
     """执行 staging 清洗主流程。
 
@@ -297,8 +279,11 @@ def process(
     """
     ensure_dir(cfg.paths.staging_root)
 
-    # 加载已处理缓存（幂等支持）
-    processed_cache = _load_cache()
+    # 默认重新生成当前步骤产物，避免旧 JSONL 混入新 run；--append 仅用于调试追加。
+    if not append and _OUTPUT_PATH.exists():
+        _OUTPUT_PATH.unlink()
+
+    processed_cache: set[str] = set()
 
     # 收集待处理的 raw 文件路径；JD 支持多个来源子目录，如 csv_import / cn_skillspan_lkst
     source_dirs: dict[str, Path] = {
@@ -349,9 +334,6 @@ def process(
             if stats["processed"] % 500 == 0:
                 logger.info("  已清洗 %d 份文档…", stats["processed"])
 
-    # 持久化缓存
-    _save_cache(processed_cache)
-
     stats["section_type_counts"] = dict(section_type_counts)
     logger.info(
         "Staging 完成：processed=%d  skipped_cache=%d  skipped_empty=%d",
@@ -367,11 +349,13 @@ def _parse_args() -> argparse.Namespace:
                    default=None, help="指定数据源，默认处理全部")
     p.add_argument("--limit", type=int, default=None,
                    help="每个数据源最多处理的文档数（调试用）")
+    p.add_argument("--append", action="store_true",
+                   help="保留已有 staged_documents.jsonl 并追加新结果（默认覆盖当前步骤输出）")
     return p.parse_args()
 
 
 if __name__ == "__main__":
     args = _parse_args()
-    result = process(sources=args.sources, limit=args.limit)
+    result = process(sources=args.sources, limit=args.limit, append=args.append)
     print(f"完成：processed={result['processed']}  skipped={result['skipped_cache']}")
     print("章节类型分布：", result.get("section_type_counts", {}))

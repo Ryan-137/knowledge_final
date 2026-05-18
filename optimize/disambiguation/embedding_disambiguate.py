@@ -39,6 +39,7 @@ from optimize.utils.file_utils import (
     write_json,
     write_jsonl,
 )
+from optimize.utils.hash_utils import file_sha256
 from optimize.utils.logging_utils import get_pipeline_logger
 
 logger = get_pipeline_logger("disambiguation.embedding_disambiguate")
@@ -47,6 +48,7 @@ _LOG_PATH        = cfg.paths.disambig_log
 _CLUSTERS_PATH   = cfg.paths.canonical_root / "new_entity_clusters.json"
 _EMB_CACHE_PATH  = cfg.paths.embedding_cache / "entity_embeddings.npy"
 _EMB_IDS_PATH    = cfg.paths.embedding_cache / "entity_ids.json"
+_EMB_MANIFEST_PATH = cfg.paths.embedding_cache / "entity_embeddings_manifest.json"
 
 
 def _build_entity_corpus(alias_dict: dict[str, list[str]], nodes: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
@@ -70,6 +72,15 @@ def _build_entity_corpus(alias_dict: dict[str, list[str]], nodes: list[dict[str,
     return entity_ids, entity_texts
 
 
+def _build_embedding_manifest() -> dict[str, str]:
+    """记录实体嵌入缓存依赖的输入指纹。"""
+    return {
+        "model": cfg.disambig.embedding_model,
+        "nodes_sha256": file_sha256(cfg.paths.seeds_nodes),
+        "aliases_sha256": file_sha256(cfg.paths.dict_skill_aliases),
+    }
+
+
 def _load_or_compute_entity_embeddings(
     model: Any,
     alias_dict: dict[str, list[str]],
@@ -78,12 +89,16 @@ def _load_or_compute_entity_embeddings(
 ) -> tuple[list[str], np.ndarray]:
     """加载缓存的实体嵌入，或重新计算并缓存。"""
     ensure_dir(cfg.paths.embedding_cache)
+    expected_manifest = _build_embedding_manifest()
 
-    if _EMB_CACHE_PATH.exists() and _EMB_IDS_PATH.exists():
+    if _EMB_CACHE_PATH.exists() and _EMB_IDS_PATH.exists() and _EMB_MANIFEST_PATH.exists():
         entity_ids = read_json(_EMB_IDS_PATH)
         embeddings = np.load(str(_EMB_CACHE_PATH))
-        logger.info("加载嵌入缓存：%d 个实体", len(entity_ids))
-        return entity_ids, embeddings
+        manifest = read_json(_EMB_MANIFEST_PATH)
+        if manifest == expected_manifest and len(entity_ids) == int(embeddings.shape[0]):
+            logger.info("加载嵌入缓存：%d 个实体", len(entity_ids))
+            return entity_ids, embeddings
+        logger.info("实体嵌入缓存已过期，重新计算")
 
     logger.info("首次计算实体嵌入（共 %d 个 evidence 节点）…", sum(1 for n in nodes if n.get("layer") == "evidence"))
     entity_ids, entity_texts = _build_entity_corpus(alias_dict, nodes)
@@ -95,6 +110,7 @@ def _load_or_compute_entity_embeddings(
     )
     np.save(str(_EMB_CACHE_PATH), embeddings)
     write_json(_EMB_IDS_PATH, entity_ids)
+    write_json(_EMB_MANIFEST_PATH, expected_manifest)
     logger.info("实体嵌入已缓存：%s", _EMB_CACHE_PATH)
     return entity_ids, embeddings
 

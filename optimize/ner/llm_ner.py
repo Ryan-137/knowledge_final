@@ -46,14 +46,14 @@ from optimize.utils.file_utils import (
     read_json,
     read_jsonl,
     write_json,
+    write_jsonl,
 )
 from optimize.utils.hash_utils import text_sha256
 from optimize.utils.logging_utils import get_pipeline_logger
 
 logger = get_pipeline_logger("ner.llm_ner")
 
-# 缓存路径（已处理的 section sha256 → 跳过）
-_CACHE_PATH    = cfg.paths.staging_root / ".llm_ner_cache.json"
+# 统计输出路径
 _STATS_PATH    = cfg.paths.canonical_root / "llm_ner_stats.json"
 
 # 只处理这些章节类型（NER 价值最高）
@@ -129,6 +129,24 @@ def _load_candidate_hint(top_k: int = 20) -> str:
     return f"请重点关注以下词面（可能是新实体）：{', '.join(top)}\n\n"
 
 
+def _matches_sources(doc: dict[str, Any], sources: list[str] | None) -> bool:
+    """按 source_group 或 source_name 过滤 staged 文档。"""
+    if not sources:
+        return True
+    source_group = doc.get("source_group", "")
+    source_name = doc.get("source_name", "")
+    return source_group in sources or source_name in sources
+
+
+def _find_surface_span(section_text: str, surface: str) -> tuple[int, int] | None:
+    """在 section 原文中定位 LLM 返回的 surface，找不到则拒绝入库。"""
+    norm = surface.lower()
+    pos = section_text.lower().find(norm)
+    if pos == -1:
+        return None
+    return pos, pos + len(surface)
+
+
 def _call_llm(
     prompt_text: str,
     api_key: str,
@@ -187,6 +205,7 @@ def _parse_llm_entities(
     section_text: str,
     section_char_start: int,
     covered_aliases: set[str],
+    stats: dict[str, int] | None = None,
 ) -> list[dict[str, Any]]:
     """将 LLM 返回的实体列表转换为 mention 格式，过滤已知实体。"""
     mentions: list[dict[str, Any]] = []
@@ -201,21 +220,25 @@ def _parse_llm_entities(
         if norm in covered_aliases:
             continue
 
-        # 定位在原文中的位置（尽力匹配，找不到则用 section 起始位置）
-        pos = section_text.lower().find(norm)
-        if pos == -1:
-            # 尝试不区分大小写的更宽松匹配
-            pos = section_text.find(surface)
-        if pos != -1:
-            abs_start = section_char_start + pos
-            abs_end   = abs_start + len(surface)
-        else:
-            abs_start = section_char_start
-            abs_end   = section_char_start + len(surface)
+        span = _find_surface_span(section_text, surface)
+        if span is None:
+            if stats is not None:
+                stats["dropped_unanchored"] = stats.get("dropped_unanchored", 0) + 1
+            continue
+        pos, end_pos = span
 
         context = str(ent.get("context", section_text[:60]))
-        conf    = float(ent.get("confidence", 0.80))
+        try:
+            conf = float(ent.get("confidence", 0.80))
+        except (TypeError, ValueError):
+            conf = 0.0
+        if conf < cfg.ner.llm_min_confidence or conf > 1.0:
+            if stats is not None:
+                stats["dropped_low_confidence"] = stats.get("dropped_low_confidence", 0) + 1
+            continue
         is_neg  = bool(ent.get("is_negative", False))
+        abs_start = section_char_start + pos
+        abs_end   = section_char_start + end_pos
 
         mid = f"m_llm_{doc_id}_{section_id}_{abs_start}_{abs_end}"
         mentions.append({
@@ -240,24 +263,11 @@ def _parse_llm_entities(
     return mentions
 
 
-def _load_cache() -> set[str]:
-    """加载已处理的 section sha256 缓存。"""
-    if _CACHE_PATH.exists():
-        try:
-            return set(read_json(_CACHE_PATH).get("processed", []))
-        except Exception:
-            pass
-    return set()
-
-
-def _save_cache(cache: set[str]) -> None:
-    write_json(_CACHE_PATH, {"processed": sorted(cache)})
-
-
 def run(
     max_docs: int = 200,
     sources: list[str] | None = None,
     dry_run: bool = False,
+    append: bool = False,
 ) -> dict[str, Any]:
     """执行 L2b LLM NER 主流程。
 
@@ -285,7 +295,7 @@ def run(
     alias_dict      = read_json(cfg.paths.dict_skill_aliases)
     covered_aliases = _build_alias_set(alias_dict)
     candidate_hint  = _load_candidate_hint(top_k=20)
-    cache           = _load_cache()
+    cache: set[str] = set()
     docs            = read_jsonl(cfg.paths.staging_root / "staged_documents.jsonl")
 
     stats = {
@@ -294,7 +304,15 @@ def run(
         "new_mentions":   0,
         "skipped_cache":  0,
         "api_calls":      0,
+        "dropped_unanchored": 0,
+        "dropped_low_confidence": 0,
     }
+
+    if not append and not dry_run and cfg.paths.staging_mentions.exists():
+        existing_mentions = read_jsonl(cfg.paths.staging_mentions)
+        rule_mentions = [m for m in existing_mentions if m.get("status") == "rule_match"]
+        write_jsonl(cfg.paths.staging_mentions, rule_mentions)
+        logger.info("已清理旧 LLM mention，保留规则 mention %d 条", len(rule_mentions))
 
     source_count: dict[str, int] = {}
 
@@ -303,7 +321,7 @@ def run(
         doc_id = doc["doc_id"]
 
         # 来源过滤
-        if sources and src not in sources:
+        if not _matches_sources(doc, sources):
             continue
 
         # 每个来源的文档上限
@@ -363,6 +381,7 @@ def run(
                 section_text    = sec["text"],
                 section_char_start = sec["char_start"],
                 covered_aliases = covered_aliases,
+                stats           = stats,
             )
             doc_new_mentions.extend(new_mentions)
             cache.add(sec_sha)
@@ -384,8 +403,8 @@ def run(
                 stats["docs_processed"], stats["new_mentions"], stats["api_calls"],
             )
 
-    _save_cache(cache)
-    write_json(_STATS_PATH, stats)
+    if not dry_run:
+        write_json(_STATS_PATH, stats)
     logger.info(
         "L2b LLM NER 完成：docs=%d  sections=%d  new_mentions=%d  api_calls=%d",
         stats["docs_processed"], stats["sections_sent"],
@@ -398,15 +417,17 @@ def _parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--max-docs", type=int, default=200,
                    help="每个来源最多处理的文档数（默认 200，控制 API 成本）")
-    p.add_argument("--sources", nargs="*", choices=["fairCV", "csv_import", "cn_skillspan_lkst"],
-                   default=None, help="指定数据来源")
+    p.add_argument("--sources", nargs="*", default=None,
+                   help="指定数据来源，可用 source_group（fairCV/jd）或具体 source_name（如 csv_import）")
     p.add_argument("--dry-run", action="store_true",
                    help="仅打印 prompt 样例，不调用 API")
+    p.add_argument("--append", action="store_true",
+                   help="保留已有 LLM mention 并追加新结果（默认清理旧 LLM 结果）")
     return p.parse_args()
 
 
 if __name__ == "__main__":
     args = _parse_args()
-    result = run(max_docs=args.max_docs, sources=args.sources, dry_run=args.dry_run)
+    result = run(max_docs=args.max_docs, sources=args.sources, dry_run=args.dry_run, append=args.append)
     if "error" not in result:
         print(f"完成：new_mentions={result['new_mentions']}  api_calls={result['api_calls']}")
