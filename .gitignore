@@ -12,3 +12,15 @@ frontend/.vite/
 !.env.example
 
 *.log
+
+optimize/.cache
+optimize/.logs
+optimize/.venv
+optimize/.chrome_profile
+docs/
+optimize/docs/
+optimize/pipeline_data/
+optimize/requirements.txt
+
+AGENTS.md
+predocs/
